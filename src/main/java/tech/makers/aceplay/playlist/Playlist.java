@@ -5,6 +5,7 @@ import tech.makers.aceplay.track.Track;
 
 import javax.persistence.*;
 import java.util.Set;
+import tech.makers.aceplay.user.User;
 
 // https://www.youtube.com/watch?v=vreyOZxdb5Y&t=448s
 @Entity
@@ -18,13 +19,22 @@ public class Playlist {
   @ManyToMany(fetch = FetchType.EAGER)
   private Set<Track> tracks;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_id")
+  private User user;
+
   public Playlist() {}
 
-  public Playlist(String name) {
-    this(name, null);
+  public Playlist(User user) {
+    this(user, "", null);
   }
 
-  public Playlist(String name, Set<Track> tracks) {
+  public Playlist(User user, String name) {
+    this(user, name, null);
+  }
+
+  public Playlist(User user, String name, Set<Track> tracks) {
+    this.user = user;
     this.name = name;
     this.tracks = tracks;
   }
@@ -35,6 +45,10 @@ public class Playlist {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public Long getId() {
