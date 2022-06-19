@@ -25,18 +25,18 @@ public class Playlist {
 
   public Playlist() {}
 
-  public Playlist(User user) {
-    this(user, "", null);
+  public Playlist(String name) {
+    this(name, null, null);
   }
 
-  public Playlist(User user, String name) {
-    this(user, name, null);
+  public Playlist(String name, Set<Track> tracks) {
+    this(name, tracks, null);
   }
 
-  public Playlist(User user, String name, Set<Track> tracks) {
-    this.user = user;
+  public Playlist(String name, Set<Track> tracks, User user) {
     this.name = name;
     this.tracks = tracks;
+    this.user = user;
   }
 
   public String getName() {
