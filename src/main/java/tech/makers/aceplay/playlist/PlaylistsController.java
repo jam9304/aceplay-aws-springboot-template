@@ -28,6 +28,10 @@ public class PlaylistsController {
 
   @PostMapping("/api/playlists")
   public Playlist create(@RequestBody PlaylistDto playlistDto, Principal principal) {
+    if (playlistDto.getName().equals("")) {
+      throw new java.lang.Error("PLAYLIST NAME REQUIRED");
+    }
+  
     User user = userRepository.findByUsername(principal.getName());
     playlistDto.setUser(user);
     Playlist playlist = new Playlist();

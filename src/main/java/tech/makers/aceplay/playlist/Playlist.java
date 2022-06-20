@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import tech.makers.aceplay.track.Track;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 import java.util.Set;
 import tech.makers.aceplay.user.User;
 
@@ -14,7 +16,7 @@ public class Playlist {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  private String name;
+  @NotNull private String name;
 
   @ManyToMany(fetch = FetchType.EAGER)
   private Set<Track> tracks;
