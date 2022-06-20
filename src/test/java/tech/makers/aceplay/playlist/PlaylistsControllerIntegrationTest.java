@@ -1,6 +1,7 @@
 package tech.makers.aceplay.playlist;
 
 import org.hamcrest.collection.IsEmptyCollection;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -13,6 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import tech.makers.aceplay.track.Track;
 import tech.makers.aceplay.track.TrackRepository;
+import tech.makers.aceplay.user.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 
@@ -25,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+
 class PlaylistsControllerIntegrationTest {
   @Autowired
   private MockMvc mvc;
@@ -33,6 +38,9 @@ class PlaylistsControllerIntegrationTest {
 
   @Autowired private PlaylistRepository repository;
 
+  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+
+
   @Test
   void WhenLoggedOut_PlaylistsIndexReturnsForbidden() throws Exception {
     mvc.perform(MockMvcRequestBuilders.get("/api/playlists").contentType(MediaType.APPLICATION_JSON))
@@ -40,20 +48,23 @@ class PlaylistsControllerIntegrationTest {
   }
 
   @Test
-  @WithMockUser
+  @WithMockUser(username="james")
   void WhenLoggedIn_AndThereAreNoPlaylists_PlaylistsIndexReturnsNoTracks() throws Exception {
     mvc.perform(MockMvcRequestBuilders.get("/api/playlists").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$", hasSize(0)));
   }
-
+  
   @Test
   @WithMockUser
   void WhenLoggedIn_AndThereArePlaylists_PlaylistIndexReturnsTracks() throws Exception {
+  
     Track track = trackRepository.save(new Track("Title", "Artist", "https://example.org/"));
-    repository.save(new Playlist("My Playlist", Set.of(track)));
-    repository.save(new Playlist("Their Playlist"));
+    User user = new User("kay", passwordEncoder.encode("pass"));
+    User user2 = new User("bay", passwordEncoder.encode("pass"));
+    repository.save(new Playlist(user, "My Playlist", Set.of(track)));
+    repository.save(new Playlist(user2, "Their Playlist"));
 
     mvc.perform(MockMvcRequestBuilders.get("/api/playlists").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -68,7 +79,8 @@ class PlaylistsControllerIntegrationTest {
 
   @Test
   void WhenLoggedOut_PlaylistsGetReturnsForbidden() throws Exception {
-    Playlist playlist = repository.save(new Playlist("My Playlist"));
+    User user = new User("kay", passwordEncoder.encode("pass"));
+    Playlist playlist = repository.save(new Playlist(user, "My Playlist"));
     mvc.perform(MockMvcRequestBuilders.get("/api/playlists/" + playlist.getId()).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isForbidden());
   }
@@ -83,8 +95,9 @@ class PlaylistsControllerIntegrationTest {
   @Test
   @WithMockUser
   void WhenLoggedIn_AndThereIsAPlaylist_PlaylistGetReturnsPlaylist() throws Exception {
+    User user = new User("kay", passwordEncoder.encode("pass"));
     Track track = trackRepository.save(new Track("Title", "Artist", "https://example.org/"));
-    Playlist playlist = repository.save(new Playlist("My Playlist", Set.of(track)));
+    Playlist playlist = repository.save(new Playlist(user, "My Playlist", Set.of(track)));
 
     mvc.perform(MockMvcRequestBuilders.get("/api/playlists/" + playlist.getId()).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -124,8 +137,9 @@ class PlaylistsControllerIntegrationTest {
 
   @Test
   void WhenLoggedOut_PlaylistAddTrackIsForbidden() throws Exception {
+    User user = new User("kay", passwordEncoder.encode("pass"));
     Track track = trackRepository.save(new Track("Title", "Artist", "https://example.org/"));
-    Playlist playlist = repository.save(new Playlist("My Playlist"));
+    Playlist playlist = repository.save(new Playlist(user, "My Playlist"));
 
     mvc.perform(
             MockMvcRequestBuilders.put("/api/playlists/" + playlist.getId() + "/tracks")
@@ -140,8 +154,9 @@ class PlaylistsControllerIntegrationTest {
   @Test
   @WithMockUser
   void WhenLoggedIn_TracksPostCreatesNewTrack() throws Exception {
+    User user = new User("kay", passwordEncoder.encode("pass"));
     Track track = trackRepository.save(new Track("Title", "Artist", "https://example.org/"));
-    Playlist playlist = repository.save(new Playlist("My Playlist"));
+    Playlist playlist = repository.save(new Playlist(user, "My Playlist"));
 
     mvc.perform(
             MockMvcRequestBuilders.put("/api/playlists/" + playlist.getId() + "/tracks")

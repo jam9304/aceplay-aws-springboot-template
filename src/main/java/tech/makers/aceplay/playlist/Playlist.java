@@ -25,10 +25,6 @@ public class Playlist {
 
   public Playlist() {}
 
-  public Playlist(User user) {
-    this(user, "", null);
-  }
-
   public Playlist(User user, String name) {
     this(user, name, null);
   }

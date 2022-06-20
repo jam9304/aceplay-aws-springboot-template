@@ -14,10 +14,6 @@ public class PlaylistDto {
 
   public PlaylistDto() {}
 
-  public PlaylistDto(User user) {
-    this(user, "", null);
-  }
-
   public PlaylistDto(User user, String name) {
     this(user, name, null);
   }
