@@ -28,7 +28,6 @@ public class PlaylistsController {
 
   @PostMapping("/api/playlists")
   public Playlist create(@RequestBody PlaylistDto playlistDto, Principal principal) {
-    System.out.println("HEREHEREHHERE");
     User user = userRepository.findByUsername(principal.getName());
     playlistDto.setUser(user);
     Playlist playlist = new Playlist();
