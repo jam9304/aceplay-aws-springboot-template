@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import tech.makers.aceplay.track.Track;
 
 import javax.persistence.*;
+
+import java.util.Date;
 import java.util.Set;
 import tech.makers.aceplay.user.User;
 
@@ -18,6 +20,9 @@ public class Playlist {
 
   @ManyToMany(fetch = FetchType.EAGER)
   private Set<Track> tracks;
+
+  @OneToMany(mappedBy = "playlist")
+  private Set<DateTrackAddedToPlaylist> date;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id")

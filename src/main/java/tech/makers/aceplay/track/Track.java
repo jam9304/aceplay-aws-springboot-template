@@ -4,8 +4,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Set;
+import tech.makers.aceplay.playlist.*;
 
 // https://www.youtube.com/watch?v=5r3QU09v7ig&t=2999s
 @Entity
@@ -19,6 +23,9 @@ public class Track {
   private String artist;
 
   private URL publicUrl;
+  
+  @OneToMany(mappedBy = "track")
+  private Set<DateTrackAddedToPlaylist> date;
 
   public Track() { }
 

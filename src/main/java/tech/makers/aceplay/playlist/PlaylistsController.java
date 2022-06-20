@@ -1,5 +1,6 @@
 package tech.makers.aceplay.playlist;
 
+import java.util.Date;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class PlaylistsController {
   @Autowired private PlaylistRepository playlistRepository;
   @Autowired private UserRepository userRepository;
   @Autowired private TrackRepository trackRepository;
+  @Autowired private DateTrackAddedToPlaylist dateTrackAddedToPlaylist;
 
   @GetMapping("/api/playlists")
   public Iterable<Playlist> playlists(Principal principal) {
@@ -43,12 +45,16 @@ public class PlaylistsController {
 
   @PutMapping("/api/playlists/{id}/tracks")
   public Track addTrack(@PathVariable Long id, @RequestBody TrackIdentifierDto trackIdentifierDto) {
+    // Date dateAddedToPlaylist = new Date();
     Playlist playlist = playlistRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No playlist exists with id " + id));
     Track track = trackRepository.findById(trackIdentifierDto.getId())
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No track exists with id " + trackIdentifierDto.getId()));
-    playlist.getTracks().add(track);
+
+    
+    playlist.getTracks().add(track); // playlist.getTracks().add(trackAndDate);
     playlistRepository.save(playlist);
+    dateTrackAddedToPlaylist;
     return track;
   }
 }
