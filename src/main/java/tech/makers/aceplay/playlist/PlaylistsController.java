@@ -9,6 +9,7 @@ import tech.makers.aceplay.track.TrackRepository;
 import tech.makers.aceplay.user.User;
 import tech.makers.aceplay.user.UserRepository;
 import java.security.Principal;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -56,21 +57,17 @@ public class PlaylistsController {
     return track;
   }
 
-  // @DeleteMapping("api/playlists{playlist_id}/tracks/{tracks_id}")
-  // public void delete(@PathVariable Long tracks_id){
-  //   Playlist playlistSong = playlistRepository
-  //           .findById(tracks_id)
-  //           .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No track exists with id " + id));
-  //   playlistRepository.delete(playlistSong);
-  // }
-
-
-
-  // @DeleteMapping("/api/tracks/{id}")
-  // public void delete(@PathVariable Long id) {
-  //   Track track = trackRepository
-  //           .findById(id)
-  //           .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No track exists with id " + id));
-  //   trackRepository.delete(track);
-  // }
+  
+  @DeleteMapping("api/playlists/{id}/tracks/{tracksId}")
+  public Playlist updatePlaylist(@PathVariable Long id, @PathVariable Long tracksId){
+    Playlist playlist = playlistRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No playlist exists with id " + id));
+    Track track = trackRepository.findById(tracksId)
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No track exists with id " + tracksId));
+    List<Track> tracks = playlist.getTracks();
+    tracks.remove(track);
+    playlistRepository.save(playlist);
+    
+    return playlist;
+  }
 }
