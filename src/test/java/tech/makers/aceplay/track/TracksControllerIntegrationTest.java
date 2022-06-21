@@ -1,6 +1,8 @@
 package tech.makers.aceplay.track;
 
 import org.hamcrest.Matchers;
+import org.hibernate.action.spi.Executable;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,12 +14,16 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.util.StringUtils;
 import tech.makers.aceplay.track.Track;
 import tech.makers.aceplay.track.TrackRepository;
+import org.springframework.web.util.NestedServletException;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 // https://www.youtube.com/watch?v=L4vkcgRnw2g&t=908s
 @SpringBootTest
@@ -77,6 +83,36 @@ class TracksControllerIntegrationTest {
     assertEquals("Blue Line Swinger", track.getTitle());
     assertEquals("https://example.org/track.mp3", track.getPublicUrl().toString());
   }
+
+  @Test
+  public void whenExceptionThrown_thenAssertionSucceeds() {
+    Exception exception = assertThrows(NumberFormatException.class, () -> {
+        Integer.parseInt("1a");
+    });
+
+    String expectedMessage = "For input string";
+    String actualMessage = exception.getMessage();
+
+    assertTrue(actualMessage.contains(expectedMessage));
+}
+
+
+  @Test
+  @WithMockUser
+  void WhenLoggedIn_WillThrowErrorWhenTrackOrArtistHasNoName() {
+    Assertions.assertThrows(NestedServletException.class, () -> {
+      mvc.perform(
+      MockMvcRequestBuilders.post("/api/tracks")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("{\"title\": \"\", \"artist\": \"Yo La Tengo\", \"publicUrl\": \"https://example.org/track.mp3\"}"))
+          .andExpect(status().isForbidden());
+        assertEquals(0, repository.count());
+    });
+    
+}
+
+
+
 
   @Test
   void WhenLoggedOut_TrackPostIsForbidden() throws Exception {

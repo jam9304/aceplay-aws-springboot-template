@@ -18,8 +18,11 @@ public class TracksController {
 
   @PostMapping("/api/tracks")
   public Track create(@RequestBody Track track) {
+    if (track.getTitle().equals("") || track.getArtist().equals("")) {
+      throw new java.lang.Error("TRACK TITLE AND ARTIST REQUIRED");
+    }
     return trackRepository.save(track);
-  }
+}
 
   @PatchMapping("/api/tracks/{id}")
   public Track update(@PathVariable Long id, @RequestBody Track newTrack) {

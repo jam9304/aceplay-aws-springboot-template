@@ -6,6 +6,7 @@ import tech.makers.aceplay.track.Track;
 import javax.persistence.*;
 
 import java.util.List;
+
 import java.util.Set;
 
 import tech.makers.aceplay.user.User;
@@ -17,10 +18,10 @@ public class Playlist {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  private String name;
+  @NotNull private String name;
 
   @ManyToMany(fetch = FetchType.EAGER)
-  private Set<Track> tracks;
+  private List<Track> tracks;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id")
@@ -32,7 +33,8 @@ public class Playlist {
     this(name, null);
   }
 
-  public Playlist(String name, Set<Track> tracks) {
+  public Playlist(String name, List<Track> tracks) {
+
     this.name = name;
     this.tracks = tracks;
   }
@@ -54,9 +56,9 @@ public class Playlist {
   }
 
   @JsonGetter("tracks")
-  public Set<Track> getTracks() {
+  public List<Track> getTracks() {
     if (null == tracks) {
-      return Set.of();
+      return List.of();
     }
     return tracks;
   }
