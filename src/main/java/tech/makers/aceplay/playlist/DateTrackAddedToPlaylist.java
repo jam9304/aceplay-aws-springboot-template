@@ -1,18 +1,38 @@
 package tech.makers.aceplay.playlist;
 
-import java.io.Serializable;
-import javax.persistence.Embeddable;
-import javax.persistence.Column;
+import tech.makers.aceplay.track.Track;
 
-@Embeddable
-public class DateTrackAddedToPlaylist implements Serializable {
+import javax.persistence.*;
+import java.util.Date;
 
-    @Column(name = "playlist_id")
-    Long playlistId;
+@Entity
+public
+class DateTrackAddedToPlaylist {
 
-    @Column(name = "track_id")
-    Long trackId;
+    @EmbeddedId
+    DateTrackAddedToPlaylistKey id;
 
-    // standard constructors, getters, and setters
-    // hashcode and equals implementation
+    @ManyToOne
+    @MapsId("playlistId")
+    @JoinColumn(name = "playlist_id")
+    Playlist playlist;
+
+    @ManyToOne
+    @MapsId("trackId")
+    @JoinColumn(name = "track_id")
+    Track track;
+
+    private Date date;
+
+    public DateTrackAddedToPlaylist(Date date) {
+      this.date = date;
+    }
+
+    public void setDate(Date date) {
+      this.date = new Date();
+    }
+
+    public Date getDate() {
+      return date;
+    }
 }
