@@ -55,4 +55,22 @@ public class PlaylistsController {
     playlistRepository.save(playlist);
     return track;
   }
+
+  // @DeleteMapping("api/playlists{playlist_id}/tracks/{tracks_id}")
+  // public void delete(@PathVariable Long tracks_id){
+  //   Playlist playlistSong = playlistRepository
+  //           .findById(tracks_id)
+  //           .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No track exists with id " + id));
+  //   playlistRepository.delete(playlistSong);
+  // }
+
+
+
+  // @DeleteMapping("/api/tracks/{id}")
+  // public void delete(@PathVariable Long id) {
+  //   Track track = trackRepository
+  //           .findById(id)
+  //           .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No track exists with id " + id));
+  //   trackRepository.delete(track);
+  // }
 }

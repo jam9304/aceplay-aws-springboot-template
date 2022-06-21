@@ -5,6 +5,7 @@ import tech.makers.aceplay.track.Track;
 
 import javax.persistence.*;
 
+import java.util.Date;
 import java.util.List;
 
 import java.util.Set;
@@ -18,7 +19,7 @@ public class Playlist {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @NotNull private String name;
+  private String name;
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Track> tracks;

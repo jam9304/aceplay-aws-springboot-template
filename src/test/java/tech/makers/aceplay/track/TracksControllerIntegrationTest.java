@@ -21,6 +21,7 @@ import org.springframework.web.util.NestedServletException;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -110,9 +111,6 @@ class TracksControllerIntegrationTest {
     });
     
 }
-
-
-
 
   @Test
   void WhenLoggedOut_TrackPostIsForbidden() throws Exception {
