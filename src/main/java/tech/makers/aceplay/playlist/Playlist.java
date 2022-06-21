@@ -6,6 +6,8 @@ import tech.makers.aceplay.track.Track;
 import javax.persistence.*;
 
 import java.util.List;
+import java.util.Set;
+
 import tech.makers.aceplay.user.User;
 
 // https://www.youtube.com/watch?v=vreyOZxdb5Y&t=448s
@@ -18,7 +20,7 @@ public class Playlist {
   private String name;
 
   @ManyToMany(fetch = FetchType.EAGER)
-  private List<Track> tracks;
+  private Set<Track> tracks;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id")
@@ -30,7 +32,7 @@ public class Playlist {
     this(name, null);
   }
 
-  public Playlist(String name, List<Track> tracks) {
+  public Playlist(String name, Set<Track> tracks) {
     this.name = name;
     this.tracks = tracks;
   }
@@ -52,9 +54,9 @@ public class Playlist {
   }
 
   @JsonGetter("tracks")
-  public List<Track> getTracks() {
+  public Set<Track> getTracks() {
     if (null == tracks) {
-      return List.of();
+      return Set.of();
     }
     return tracks;
   }
