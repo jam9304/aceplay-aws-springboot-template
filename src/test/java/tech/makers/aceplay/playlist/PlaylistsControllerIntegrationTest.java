@@ -63,14 +63,16 @@ class PlaylistsControllerIntegrationTest {
   }
   
   @Test
-  @WithMockUser(username = "neto")
+  @WithMockUser(username = "james")
   void WhenLoggedIn_AndThereArePlaylists_PlaylistIndexReturnsTracks() throws Exception {
-    User user = new User("neto", "neto");
-    user.setId(5L);
+    User user = new User("james", "james");
     userRepository.save(user);
 
     Track track = trackRepository.save(new Track("Title", "Artist", "https://example.org/"));
-    Playlist playlist = repository.save(new Playlist("My Playlist", List.of(track), user));
+    repository.save(new Playlist("My Playlist", List.of(track), user));
+    System.out.println("********************************MESSAGE*******************************"); 
+    System.out.println(repository.findAll()); 
+    System.out.println("********************************DONE*******************************"); 
 
 
     mvc.perform(MockMvcRequestBuilders.get("/api/playlists").contentType(MediaType.APPLICATION_JSON))
