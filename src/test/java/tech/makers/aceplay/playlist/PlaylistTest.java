@@ -7,6 +7,7 @@ import tech.makers.aceplay.user.*;
 import static org.mockito.Mockito.*;
 
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,7 @@ public void init() {
   @Test
   void testConstructs() {
 
-    Playlist subject = new Playlist(mockedUser, "Hello, world!", Set.of());
+    Playlist subject = new Playlist("Hello, world!", List.of());
     assertEquals("Hello, world!", subject.getName());
     assertEquals(Set.of(), subject.getTracks());
     assertEquals(null, subject.getId());
@@ -32,7 +33,7 @@ public void init() {
 
   @Test
   void testToString() {
-    Playlist subject = new Playlist(mockedUser, "Hello, world!");
+    Playlist subject = new Playlist("Hello, world!");
     assertEquals(
         "Playlist[id=null name='Hello, world!']",
         subject.toString());

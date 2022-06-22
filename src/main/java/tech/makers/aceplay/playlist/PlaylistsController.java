@@ -70,4 +70,12 @@ public class PlaylistsController {
     
     return playlist;
   }
+
+  @DeleteMapping("api/playlists/{id}")
+  public void deletePlaylist(@PathVariable Long id) {
+    Playlist playlist = playlistRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No playlist exists with id " + id));
+    playlistRepository.delete(playlist);
+  }
 }
+

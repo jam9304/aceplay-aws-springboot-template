@@ -4,11 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import tech.makers.aceplay.track.Track;
 
 import javax.persistence.*;
-
-import java.util.Date;
 import java.util.List;
-
-import java.util.Set;
 
 import tech.makers.aceplay.user.User;
 
@@ -38,6 +34,13 @@ public class Playlist {
 
     this.name = name;
     this.tracks = tracks;
+  }
+
+  public Playlist(String name, List<Track> tracks, User user) {
+
+    this.name = name;
+    this.tracks = tracks;
+    this.user = user;
   }
 
   public String getName() {

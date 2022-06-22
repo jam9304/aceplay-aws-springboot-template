@@ -35,6 +35,10 @@ public class User implements UserDetails {
     return id;
   }
 
+  public void setId(Long id) {
+    this.id = id;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     Set<GrantedAuthority> authorities = new HashSet<>();
