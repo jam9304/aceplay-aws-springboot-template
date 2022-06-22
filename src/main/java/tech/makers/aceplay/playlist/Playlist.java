@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import tech.makers.aceplay.track.Track;
 
 import javax.persistence.*;
-
 import java.util.List;
-
-import java.util.Set;
 
 import tech.makers.aceplay.user.User;
 
@@ -18,12 +15,12 @@ public class Playlist {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @NotNull private String name;
+  private String name;
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Track> tracks;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "user_id")
   private User user;
 
@@ -37,6 +34,13 @@ public class Playlist {
 
     this.name = name;
     this.tracks = tracks;
+  }
+
+  public Playlist(String name, List<Track> tracks, User user) {
+
+    this.name = name;
+    this.tracks = tracks;
+    this.user = user;
   }
 
   public String getName() {

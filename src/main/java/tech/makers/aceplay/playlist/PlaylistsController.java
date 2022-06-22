@@ -9,6 +9,7 @@ import tech.makers.aceplay.track.TrackRepository;
 import tech.makers.aceplay.user.User;
 import tech.makers.aceplay.user.UserRepository;
 import java.security.Principal;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -55,4 +56,26 @@ public class PlaylistsController {
     playlistRepository.save(playlist);
     return track;
   }
+
+  
+  @DeleteMapping("api/playlists/{id}/tracks/{tracksId}")
+  public Playlist updatePlaylist(@PathVariable Long id, @PathVariable Long tracksId){
+    Playlist playlist = playlistRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No playlist exists with id " + id));
+    Track track = trackRepository.findById(tracksId)
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No track exists with id " + tracksId));
+    List<Track> tracks = playlist.getTracks();
+    tracks.remove(track);
+    playlistRepository.save(playlist);
+    
+    return playlist;
+  }
+
+  @DeleteMapping("api/playlists/{id}")
+  public void deletePlaylist(@PathVariable Long id) {
+    Playlist playlist = playlistRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No playlist exists with id " + id));
+    playlistRepository.delete(playlist);
+  }
 }
+
